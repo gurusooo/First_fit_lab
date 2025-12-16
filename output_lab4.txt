@@ -1,0 +1,281 @@
+     First Fit Memory Allocator - Unit Tests
+     
+     === Test 1: Basic Allocation ===
+     Heap initialized with 1048576 bytes
+     Allocated 100 bytes at 0000000000408060
+     Allocated 200 bytes at 00000000004080E8
+     
+     === Heap Dump ===
+     Block 0: [0000000000408040] size=104, free=0
+     Block 1: [00000000004080C8] size=200, free=0
+     Block 2: [00000000004081B0] size=1048176, free=1
+     Total used: 304 bytes
+     Total free: 1048176 bytes
+     Fragmentation: 99.97%
+     Freed block at 0000000000408060 (size: 104)
+     Freed block at 00000000004080E8 (size: 200)
+     
+     === Test 2: Reuse Freed Memory ===
+     Heap reset
+     Freed block at 0000000000408060 (size: 304)
+     
+     === Heap Dump ===
+     Block 0: [0000000000408040] size=304, free=1
+     Block 1: [0000000000408190] size=400, free=0
+     Block 2: [0000000000408340] size=1047776, free=1
+     Total used: 400 bytes
+     Total free: 1048080 bytes
+     Fragmentation: 99.96%
+     Reused freed block correctly
+     Freed block at 00000000004081B0 (size: 400)
+     Freed block at 0000000000408060 (size: 256)
+     
+     === Test 3: Fragmentation Test ===
+     Heap reset
+     Freed block at 0000000000408060 (size: 64)
+     Freed block at 0000000000408120 (size: 64)
+     Freed block at 00000000004081E0 (size: 64)
+     After freeing every second block:
+     
+     === Heap Dump ===
+     Block 0: [0000000000408040] size=64, free=1
+     Block 1: [00000000004080A0] size=64, free=0
+     Block 2: [0000000000408100] size=64, free=1
+     Block 3: [0000000000408160] size=64, free=0
+     Block 4: [00000000004081C0] size=1048160, free=1
+     Total used: 128 bytes
+     Total free: 1048288 bytes
+     Fragmentation: 99.99%
+     Large allocation succeeded (defragmentation worked)
+     Freed block at 00000000004081E0 (size: 256)
+     Freed block at 00000000004080C0 (size: 64)
+     Freed block at 0000000000408180 (size: 64)
+     
+     === Test 4: Edge Cases ===
+     Heap reset
+     Zero allocation correctly rejected
+     Failed to allocate 2097152 bytes (no suitable block)
+     Oversize allocation correctly rejected
+     Free(NULL) handled correctly
+     Freed block at 0000000000408060 (size: 56)
+     Double free detected at 0000000000408060
+     
+     === Test 5: Stress Test ===
+     Heap reset
+     Made 100 allocations before OOM
+     
+     === Heap Dump ===
+     Block 0: [0000000000408040] size=1024, free=0
+     Block 1: [0000000000408460] size=1024, free=0
+     Block 2: [0000000000408880] size=1024, free=0
+     Block 3: [0000000000408CA0] size=1024, free=0
+     Block 4: [00000000004090C0] size=1024, free=0
+     Block 5: [00000000004094E0] size=1024, free=0
+     Block 6: [0000000000409900] size=1024, free=0
+     Block 7: [0000000000409D20] size=1024, free=0
+     Block 8: [000000000040A140] size=1024, free=0
+     Block 9: [000000000040A560] size=1024, free=0
+     Block 10: [000000000040A980] size=1024, free=0
+     Block 11: [000000000040ADA0] size=1024, free=0
+     Block 12: [000000000040B1C0] size=1024, free=0
+     Block 13: [000000000040B5E0] size=1024, free=0
+     Block 14: [000000000040BA00] size=1024, free=0
+     Block 15: [000000000040BE20] size=1024, free=0
+     Block 16: [000000000040C240] size=1024, free=0
+     Block 17: [000000000040C660] size=1024, free=0
+     Block 18: [000000000040CA80] size=1024, free=0
+     Block 19: [000000000040CEA0] size=1024, free=0
+     Block 20: [000000000040D2C0] size=1024, free=0
+     Block 21: [000000000040D6E0] size=1024, free=0
+     Block 22: [000000000040DB00] size=1024, free=0
+     Block 23: [000000000040DF20] size=1024, free=0
+     Block 24: [000000000040E340] size=1024, free=0
+     Block 25: [000000000040E760] size=1024, free=0
+     Block 26: [000000000040EB80] size=1024, free=0
+     Block 27: [000000000040EFA0] size=1024, free=0
+     Block 28: [000000000040F3C0] size=1024, free=0
+     Block 29: [000000000040F7E0] size=1024, free=0
+     Block 30: [000000000040FC00] size=1024, free=0
+     Block 31: [0000000000410020] size=1024, free=0
+     Block 32: [0000000000410440] size=1024, free=0
+     Block 33: [0000000000410860] size=1024, free=0
+     Block 34: [0000000000410C80] size=1024, free=0
+     Block 35: [00000000004110A0] size=1024, free=0
+     Block 36: [00000000004114C0] size=1024, free=0
+     Block 37: [00000000004118E0] size=1024, free=0
+     Block 38: [0000000000411D00] size=1024, free=0
+     Block 39: [0000000000412120] size=1024, free=0
+     Block 40: [0000000000412540] size=1024, free=0
+     Block 41: [0000000000412960] size=1024, free=0
+     Block 42: [0000000000412D80] size=1024, free=0
+     Block 43: [00000000004131A0] size=1024, free=0
+     Block 44: [00000000004135C0] size=1024, free=0
+     Block 45: [00000000004139E0] size=1024, free=0
+     Block 46: [0000000000413E00] size=1024, free=0
+     Block 47: [0000000000414220] size=1024, free=0
+     Block 48: [0000000000414640] size=1024, free=0
+     Block 49: [0000000000414A60] size=1024, free=0
+     Block 50: [0000000000414E80] size=1024, free=0
+     Block 51: [00000000004152A0] size=1024, free=0
+     Block 52: [00000000004156C0] size=1024, free=0
+     Block 53: [0000000000415AE0] size=1024, free=0
+     Block 54: [0000000000415F00] size=1024, free=0
+     Block 55: [0000000000416320] size=1024, free=0
+     Block 56: [0000000000416740] size=1024, free=0
+     Block 57: [0000000000416B60] size=1024, free=0
+     Block 58: [0000000000416F80] size=1024, free=0
+     Block 59: [00000000004173A0] size=1024, free=0
+     Block 60: [00000000004177C0] size=1024, free=0
+     Block 61: [0000000000417BE0] size=1024, free=0
+     Block 62: [0000000000418000] size=1024, free=0
+     Block 63: [0000000000418420] size=1024, free=0
+     Block 64: [0000000000418840] size=1024, free=0
+     Block 65: [0000000000418C60] size=1024, free=0
+     Block 66: [0000000000419080] size=1024, free=0
+     Block 67: [00000000004194A0] size=1024, free=0
+     Block 68: [00000000004198C0] size=1024, free=0
+     Block 69: [0000000000419CE0] size=1024, free=0
+     Block 70: [000000000041A100] size=1024, free=0
+     Block 71: [000000000041A520] size=1024, free=0
+     Block 72: [000000000041A940] size=1024, free=0
+     Block 73: [000000000041AD60] size=1024, free=0
+     Block 74: [000000000041B180] size=1024, free=0
+     Block 75: [000000000041B5A0] size=1024, free=0
+     Block 76: [000000000041B9C0] size=1024, free=0
+     Block 77: [000000000041BDE0] size=1024, free=0
+     Block 78: [000000000041C200] size=1024, free=0
+     Block 79: [000000000041C620] size=1024, free=0
+     Block 80: [000000000041CA40] size=1024, free=0
+     Block 81: [000000000041CE60] size=1024, free=0
+     Block 82: [000000000041D280] size=1024, free=0
+     Block 83: [000000000041D6A0] size=1024, free=0
+     Block 84: [000000000041DAC0] size=1024, free=0
+     Block 85: [000000000041DEE0] size=1024, free=0
+     Block 86: [000000000041E300] size=1024, free=0
+     Block 87: [000000000041E720] size=1024, free=0
+     Block 88: [000000000041EB40] size=1024, free=0
+     Block 89: [000000000041EF60] size=1024, free=0
+     Block 90: [000000000041F380] size=1024, free=0
+     Block 91: [000000000041F7A0] size=1024, free=0
+     Block 92: [000000000041FBC0] size=1024, free=0
+     Block 93: [000000000041FFE0] size=1024, free=0
+     Block 94: [0000000000420400] size=1024, free=0
+     Block 95: [0000000000420820] size=1024, free=0
+     Block 96: [0000000000420C40] size=1024, free=0
+     Block 97: [0000000000421060] size=1024, free=0
+     Block 98: [0000000000421480] size=1024, free=0
+     Block 99: [00000000004218A0] size=1024, free=0
+     Block 100: [0000000000421CC0] size=942944, free=1
+     Total used: 102400 bytes
+     Total free: 942944 bytes
+     Fragmentation: 90.20%
+     Freed block at 0000000000408060 (size: 1024)
+     Freed block at 0000000000408480 (size: 1024)
+     Freed block at 00000000004088A0 (size: 1024)
+     Freed block at 0000000000408CC0 (size: 1024)
+     Freed block at 00000000004090E0 (size: 1024)
+     Freed block at 0000000000409500 (size: 1024)
+     Freed block at 0000000000409920 (size: 1024)
+     Freed block at 0000000000409D40 (size: 1024)
+     Freed block at 000000000040A160 (size: 1024)
+     Freed block at 000000000040A580 (size: 1024)
+     Freed block at 000000000040A9A0 (size: 1024)
+     Freed block at 000000000040ADC0 (size: 1024)
+     Freed block at 000000000040B1E0 (size: 1024)
+     Freed block at 000000000040B600 (size: 1024)
+     Freed block at 000000000040BA20 (size: 1024)
+     Freed block at 000000000040BE40 (size: 1024)
+     Freed block at 000000000040C260 (size: 1024)
+     Freed block at 000000000040C680 (size: 1024)
+     Freed block at 000000000040CAA0 (size: 1024)
+     Freed block at 000000000040CEC0 (size: 1024)
+     Freed block at 000000000040D2E0 (size: 1024)
+     Freed block at 000000000040D700 (size: 1024)
+     Freed block at 000000000040DB20 (size: 1024)
+     Freed block at 000000000040DF40 (size: 1024)
+     Freed block at 000000000040E360 (size: 1024)
+     Freed block at 000000000040E780 (size: 1024)
+     Freed block at 000000000040EBA0 (size: 1024)
+     Freed block at 000000000040EFC0 (size: 1024)
+     Freed block at 000000000040F3E0 (size: 1024)
+     Freed block at 000000000040F800 (size: 1024)
+     Freed block at 000000000040FC20 (size: 1024)
+     Freed block at 0000000000410040 (size: 1024)
+     Freed block at 0000000000410460 (size: 1024)
+     Freed block at 0000000000410880 (size: 1024)
+     Freed block at 0000000000410CA0 (size: 1024)
+     Freed block at 00000000004110C0 (size: 1024)
+     Freed block at 00000000004114E0 (size: 1024)
+     Freed block at 0000000000411900 (size: 1024)
+     Freed block at 0000000000411D20 (size: 1024)
+     Freed block at 0000000000412140 (size: 1024)
+     Freed block at 0000000000412560 (size: 1024)
+     Freed block at 0000000000412980 (size: 1024)
+     Freed block at 0000000000412DA0 (size: 1024)
+     Freed block at 00000000004131C0 (size: 1024)
+     Freed block at 00000000004135E0 (size: 1024)
+     Freed block at 0000000000413A00 (size: 1024)
+     Freed block at 0000000000413E20 (size: 1024)
+     Freed block at 0000000000414240 (size: 1024)
+     Freed block at 0000000000414660 (size: 1024)
+     Freed block at 0000000000414A80 (size: 1024)
+     Freed block at 0000000000414EA0 (size: 1024)
+     Freed block at 00000000004152C0 (size: 1024)
+     Freed block at 00000000004156E0 (size: 1024)
+     Freed block at 0000000000415B00 (size: 1024)
+     Freed block at 0000000000415F20 (size: 1024)
+     Freed block at 0000000000416340 (size: 1024)
+     Freed block at 0000000000416760 (size: 1024)
+     Freed block at 0000000000416B80 (size: 1024)
+     Freed block at 0000000000416FA0 (size: 1024)
+     Freed block at 00000000004173C0 (size: 1024)
+     Freed block at 00000000004177E0 (size: 1024)
+     Freed block at 0000000000417C00 (size: 1024)
+     Freed block at 0000000000418020 (size: 1024)
+     Freed block at 0000000000418440 (size: 1024)
+     Freed block at 0000000000418860 (size: 1024)
+     Freed block at 0000000000418C80 (size: 1024)
+     Freed block at 00000000004190A0 (size: 1024)
+     Freed block at 00000000004194C0 (size: 1024)
+     Freed block at 00000000004198E0 (size: 1024)
+     Freed block at 0000000000419D00 (size: 1024)
+     Freed block at 000000000041A120 (size: 1024)
+     Freed block at 000000000041A540 (size: 1024)
+     Freed block at 000000000041A960 (size: 1024)
+     Freed block at 000000000041AD80 (size: 1024)
+     Freed block at 000000000041B1A0 (size: 1024)
+     Freed block at 000000000041B5C0 (size: 1024)
+     Freed block at 000000000041B9E0 (size: 1024)
+     Freed block at 000000000041BE00 (size: 1024)
+     Freed block at 000000000041C220 (size: 1024)
+     Freed block at 000000000041C640 (size: 1024)
+     Freed block at 000000000041CA60 (size: 1024)
+     Freed block at 000000000041CE80 (size: 1024)
+     Freed block at 000000000041D2A0 (size: 1024)
+     Freed block at 000000000041D6C0 (size: 1024)
+     Freed block at 000000000041DAE0 (size: 1024)
+     Freed block at 000000000041DF00 (size: 1024)
+     Freed block at 000000000041E320 (size: 1024)
+     Freed block at 000000000041E740 (size: 1024)
+     Freed block at 000000000041EB60 (size: 1024)
+     Freed block at 000000000041EF80 (size: 1024)
+     Freed block at 000000000041F3A0 (size: 1024)
+     Freed block at 000000000041F7C0 (size: 1024)
+     Freed block at 000000000041FBE0 (size: 1024)
+     Freed block at 0000000000420000 (size: 1024)
+     Freed block at 0000000000420420 (size: 1024)
+     Freed block at 0000000000420840 (size: 1024)
+     Freed block at 0000000000420C60 (size: 1024)
+     Freed block at 0000000000421080 (size: 1024)
+     Freed block at 00000000004214A0 (size: 1024)
+     Freed block at 00000000004218C0 (size: 1024)
+     After freeing all:
+     
+     === Heap Dump ===
+     Block 0: [0000000000408040] size=1048544, free=1
+     Total used: 0 bytes
+     Total free: 1048544 bytes
+     Fragmentation: 100.00%
+     All tests completed successfully!
+     
+     --------------------------------
